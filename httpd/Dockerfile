@@ -15,10 +15,12 @@ RUN buildDeps=' \
 		make \
 		libsqlite3-dev \
 		libz-dev \
+		libserf-dev \
+		libneon27-dev \
 	' \
 	set -x \
 	&& apt-get update \
-	&& apt-get install -y --no-install-recommends libsqlite3-0 \
+	&& apt-get install -y --no-install-recommends libsqlite3-0 libserf-1-1 libneon27 \
 	&& apt-get install -y --no-install-recommends $buildDeps \
 	&& rm -r /var/lib/apt/lists/* \
 	&& curl -SL "$SVN_BZ2_URL" -o subversion-$SVN_VERSION.tar.bz2 \
@@ -27,12 +29,13 @@ RUN buildDeps=' \
 	&& tar -xvf subversion-$SVN_VERSION.tar.bz2 -C src/svn --strip-components=1 \
 	&& rm subversion-$SVN_VERSION.tar.bz2* \
 	&& cd src/svn \
-	&& ./configure \
+	&& ./configure --with-serf \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& /sbin/ldconfig \
 	&& cd ../../ \
 	&& rm -r src/svn \
+	&& apt-get install curl \ # useful, not necessary
 	&& apt-get purge -y --auto-remove $buildDeps \
 	&& echo "Include conf/svn/httpd.conf" >> conf/httpd.conf
 

@@ -8,6 +8,8 @@ RUN depsRuntime=' \
 		libsqlite3-0 \
 		ca-certificates \
 		curl \
+		perl \
+		swig \
 		libapr1 \
 		libaprutil1 \
 		libneon27 \
@@ -16,6 +18,7 @@ RUN depsRuntime=' \
 	&& depsBuild=' \
 		bzip2 \
 		gcc \
+		libperl-dev \
 		libpcre++-dev \
 		libssl-dev \
 		make \
@@ -41,6 +44,9 @@ RUN depsRuntime=' \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& /sbin/ldconfig \
+	&& make swig-pl \
+	&& make check-swig-pl \
+	&& make install-swig-pl \
 	&& cd ../../ \
 	&& rm -r src/svn \
 	&& apt-get purge -y --auto-remove $depsBuild

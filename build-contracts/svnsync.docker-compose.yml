@@ -11,7 +11,7 @@ svnbackup:
   environment:
     ADMIN_REST_ACCESS: "true"
 testsetup:
-  image: solsson/debian-svnclient
+  image: ../svnclient
   links:
     - svnmaster
     - svnbackup

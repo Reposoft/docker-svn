@@ -1,9 +1,9 @@
 
-FROM httpd:2.4.37@sha256:a613d8f1dbb35b18cdf5a756d2ea0e621aee1c25a6321b4a05e6414fdd3c1ac1
+FROM --platform=$TARGETPLATFORM httpd:2.4.52-bullseye@sha256:5cc947a200524a822883dc6ce6456d852d7c5629ab177dfbf7e38c1b4a647705
 
-ENV SVN_VERSION 1.8.19
+ENV SVN_VERSION 1.14.1
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2
-ENV SVN_BZ2_SHA1 51d7e5329ad86a650f8fc806eb68e581055a3fd1
+ENV SVN_BZ2_SHA513 0a70c7152b77cdbcb810a029263e4b3240b6ef41d1c19714e793594088d3cca758d40dfbc05622a806b06463becb73207df249393924ce591026b749b875fcdd
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -30,7 +30,7 @@ RUN depsRuntime=" \
 	&& apt-get install -y --no-install-recommends $depsRuntime \
 	&& apt-get install -y --no-install-recommends $depsBuild \
 	&& curl -SL "$SVN_BZ2_URL" -o subversion-$SVN_VERSION.tar.bz2 \
-	&& echo "$SVN_BZ2_SHA1 subversion-$SVN_VERSION.tar.bz2" | sha1sum -c - \
+	&& echo "$SVN_BZ2_SHA512 subversion-$SVN_VERSION.tar.bz2" | sha512sum -c - \
 	&& mkdir -p src/svn \
 	&& tar -xvf subversion-$SVN_VERSION.tar.bz2 -C src/svn --strip-components=1 \
 	&& rm subversion-$SVN_VERSION.tar.bz2* \

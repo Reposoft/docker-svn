@@ -1,8 +1,8 @@
 FROM solsson/svn-httpd
 
-ENV RWEB_VERSION=v1.7.8
-ENV RWEB_TGZ_URL=https://github.com/Reposoft/rweb/archive/$RWEB_VERSION.tar.gz
-ENV RWEB_TGZ_SHA256=bcc26e36b12ec594be55f484a70837c489af8dd56dfbf0eb3f75ae5e367161a4
+ENV RWEB_VERSION=v1.7.14
+ENV RWEB_TGZ_URL=https://github.com/Reposoft/rweb/releases/download/$RWEB_VERSION/ReposWeb-$RWEB_VERSION.tgz
+ENV RWEB_TGZ_SHA256=5dd32f2caa7cc23b1cd775329c7f82e04a81ab20b8b22dcaed95cb032cbd947b
 
 RUN echo "Downloading rweb source..." \
   && curl -SLk "$RWEB_TGZ_URL" -o /usr/src/rweb-$RWEB_VERSION.tar.gz \

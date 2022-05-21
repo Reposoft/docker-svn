@@ -1,4 +1,5 @@
-FROM solsson/fpm-rweb
+ARG PUSH_TAG=latest
+FROM solsson/fpm-rweb:$PUSH_TAG
 
 ENV RWEB_VERSION=1.7.14
 ENV RWEB_TGZ_URL=https://github.com/Reposoft/rweb/releases/download/$RWEB_VERSION/ReposWeb-$RWEB_VERSION.tgz

@@ -3,7 +3,7 @@ services:
 
   svn:
     build: ../httpd
-    image: solsson/svn-httpd:${PUSH_TAG:-testing}
+    image: solsson/svn-httpd:${PUSH_TAG:-latest}
     expose:
       - "80"
 
@@ -23,8 +23,11 @@ services:
       - "80"
 
   fpm-svn:
-    build: ../rweb/fpm-svn
-    image: solsson/fpm-svn:${PUSH_TAG:-testing}
+    build:
+      context: ../rweb/fpm-svn
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/fpm-svn:${PUSH_TAG:-latest}
     entrypoint:
       - echo
       - "This was just a build job. Exiting."
@@ -33,7 +36,7 @@ services:
     depends_on:
       - fpm-svn
     build: ../rweb/fpm-rweb
-    image: solsson/fpm-rweb:${PUSH_TAG:-testing}
+    image: solsson/fpm-rweb:${PUSH_TAG:-latest}
     entrypoint:
       - echo
       - "This was just a build job. Exiting."
@@ -42,7 +45,7 @@ services:
     depends_on:
       - fpm-rweb
     build: ../rweb/rweb
-    image: solsson/rweb:${PUSH_TAG:-testing}
+    image: solsson/rweb:${PUSH_TAG:-latest}
     expose:
       - "9000"
     links:
@@ -52,7 +55,7 @@ services:
     depends_on:
       - svn
     build: ../rweb/httpd
-    image: solsson/rweb-httpd:${PUSH_TAG:-testing}
+    image: solsson/rweb-httpd:${PUSH_TAG:-latest}
     expose:
       - "80"
     environment:
@@ -70,7 +73,7 @@ services:
 
   svnclient:
     build: ../svnclient
-    image: solsson/svnclient:${PUSH_TAG:-testing}
+    image: solsson/svnclient:${PUSH_TAG:-latest}
 
   svntest:
     depends_on:

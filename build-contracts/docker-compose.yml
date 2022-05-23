@@ -1,6 +1,13 @@
 version: '2'
 services:
 
+  rweb-source:
+    # Local build
+    build: ../../rweb
+    # Online build
+    # build: ../rweb/current-dist
+    image: solsson/rweb-source:${PUSH_TAG:-latest}
+
   svn:
     build: ../httpd
     image: solsson/svn-httpd:${PUSH_TAG:-latest}
@@ -22,7 +29,7 @@ services:
     expose:
       - "80"
 
-  fpm-svn:
+  php-svn:
     build:
       context: ../rweb/fpm-svn
       args:
@@ -32,20 +39,27 @@ services:
       - echo
       - "This was just a build job. Exiting."
 
-  fpm-rweb:
+  php-svn-rweb:
     depends_on:
-      - fpm-svn
-    build: ../rweb/fpm-rweb
+      - php-svn
+    build:
+      context: ../rweb/fpm-rweb
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
     image: solsson/fpm-rweb:${PUSH_TAG:-latest}
     entrypoint:
       - echo
       - "This was just a build job. Exiting."
 
-  rweb:
+  rweb-fpm:
     depends_on:
-      - fpm-rweb
-    build: ../rweb/rweb
-    image: solsson/rweb:${PUSH_TAG:-latest}
+      - php-svn-rweb
+      - rweb-source
+    build:
+      context: ../rweb/rweb
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/rweb-fpm:${PUSH_TAG:-latest}
     expose:
       - "9000"
     links:
@@ -54,7 +68,11 @@ services:
   rweb-httpd:
     depends_on:
       - svn
-    build: ../rweb/httpd
+      - rweb-source
+    build:
+      context: ../rweb/httpd
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
     image: solsson/rweb-httpd:${PUSH_TAG:-latest}
     expose:
       - "80"
@@ -78,7 +96,10 @@ services:
   svntest:
     depends_on:
       - svnclient
-    build: ./svntest
+    build:
+      context: ./svntest
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
     labels:
       com.yolean.build-contract: "*"
     links:

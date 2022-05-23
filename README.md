@@ -57,16 +57,22 @@ Stable Debian with latest subversion release. Useful because apt repositories ar
 ## Build [rweb](https://github.com/Reposoft/rweb/) base images
 
 ```
+RWEB_SOURCE=$(pwd)/../rweb
 GIT_COMMIT=_dev
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/:/source \
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $(pwd):/source \
+  -v $RWEB_SOURCE:/rweb \
   -e PUSH_TAG=$GIT_COMMIT \
   --entrypoint=docker-compose \
   yolean/build-contract:29cb3f9a2fe6c53da6adfe186bf824c0591893fe@sha256:f21920e5923d9c42daa61f6e5515a321f14dc90eb5167ad7d36307ae7b9f8f5a \
   -f build-contracts/docker-compose.yml -p docker-svn_docker-compose \
   build \
     svn \
-    fpm-svn \
-    fpm-rweb
+    php-svn \
+    php-svn-rweb \
+    rweb-source \
+    rweb-fpm \
+    rweb-httpd
 ```
 
 ## Build rweb runtime images

@@ -59,9 +59,11 @@ Stable Debian with latest subversion release. Useful because apt repositories ar
 ```
 RWEB_SOURCE=$(pwd)/../rweb
 GIT_COMMIT=_dev
+COMPOSE_PARALLEL_LIMIT=1 \
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
   -v $(pwd):/source \
   -v $RWEB_SOURCE:/rweb \
+  -e RWEB_SOURCE=../rweb \
   -e PUSH_TAG=$GIT_COMMIT \
   --entrypoint=docker-compose \
   yolean/build-contract:29cb3f9a2fe6c53da6adfe186bf824c0591893fe@sha256:f21920e5923d9c42daa61f6e5515a321f14dc90eb5167ad7d36307ae7b9f8f5a \

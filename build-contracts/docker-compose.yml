@@ -1,9 +1,9 @@
-version: '2'
+version: '2.1'
 services:
 
   rweb-source:
     # Local build
-    build: ../../rweb
+    build: ../${RWEB_SOURCE}
     # Online build
     # build: ../rweb/current-dist
     image: solsson/rweb-source:${PUSH_TAG:-latest}

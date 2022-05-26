@@ -3,9 +3,9 @@ services:
 
   rweb-source:
     # Local build
-    build: ../${RWEB_SOURCE}
+    # build: ../${RWEB_SOURCE}
     # Online build
-    # build: ../rweb/current-dist
+    build: ../rweb/current-dist
     image: solsson/rweb-source:${PUSH_TAG:-latest}
 
   svn:

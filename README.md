@@ -77,6 +77,8 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
     rweb-httpd
 ```
 
+Note: Recent docker-compose versions seem to require double runs of the command above in order to make FROM work with a preceding build.
+
 ## Build rweb runtime images
 
 Note that docker-compose and build-contract only supports single-arch images.

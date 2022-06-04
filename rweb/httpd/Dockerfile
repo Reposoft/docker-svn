@@ -1,5 +1,5 @@
 ARG PUSH_TAG=latest
-FROM solsson/rweb-source:$PUSH_TAG as source
+FROM --platform=$TARGETPLATFORM solsson/rweb-source:$PUSH_TAG as source
 
 ARG PUSH_TAG=latest
 FROM solsson/svn-httpd:$PUSH_TAG

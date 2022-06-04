@@ -1,5 +1,5 @@
 
-FROM --platform=$TARGETPLATFORM httpd:2.4.53-bullseye@sha256:2d1f8839d6127e400ac5f65481d8a0f17ac46a3b91de40b01e649c9a0324dea0
+FROM --platform=$TARGETPLATFORM httpd:2.4.53-bullseye@sha256:c479bec894c5a7f8878b28e52d03cc95b1e784612ecd01ac7c7394fc5fa2e6e2
 
 ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2

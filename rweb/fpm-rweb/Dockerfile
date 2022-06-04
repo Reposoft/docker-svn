@@ -1,5 +1,5 @@
 ARG PUSH_TAG=latest
-FROM solsson/fpm-svn:$PUSH_TAG
+FROM --platform=$TARGETPLATFORM solsson/fpm-svn:$PUSH_TAG
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl ca-certificates \

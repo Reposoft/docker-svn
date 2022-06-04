@@ -1,4 +1,4 @@
-FROM php:8.1.6-fpm-bullseye@sha256:0cb64efb1f36d9945d10c519d9c67662b05c45707ca961331481969be0ab6fc9
+FROM --platform=$TARGETPLATFORM php:8.1.6-fpm-bullseye@sha256:e8791fa687e7cc58d4e76f77dddcde9de24cd306c274e334f25a6227ceec000f
 
 # Same build concept as in httpd,
 # but rweb should only have the svn client with http ra

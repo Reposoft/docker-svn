@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM debian:bullseye-slim@sha256:4c25ffa6ef572cf0d57da8c634769a08ae94529f7de5be5587ec8ce7b9b50f9c
+FROM --platform=$TARGETPLATFORM debian:bullseye-slim@sha256:06a93cbdd49a265795ef7b24fe374fee670148a7973190fb798e43b3cf7c5d0f
 
 ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2

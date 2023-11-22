@@ -1,33 +1,43 @@
-FROM php:7.2.13-fpm-stretch@sha256:da970907a1e98d4878c6a8e3bd7bedf0ff89ccaeff7e6af031836547d617c089
+FROM --platform=$TARGETPLATFORM php:8.1.6-fpm-bullseye@sha256:e8791fa687e7cc58d4e76f77dddcde9de24cd306c274e334f25a6227ceec000f
 
 # Same build concept as in httpd,
 # but rweb should only have the svn client with http ra
 
-ENV SVN_VERSION 1.8.19
+ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2
-ENV SVN_BZ2_SHA1 51d7e5329ad86a650f8fc806eb68e581055a3fd1
+ENV SVN_BZ2_SHA512 20ada4688ca07d9fb8da4b7d53b5084568652a3b9418c65e688886bae950a16a3ff37710fcfc9c29ef14a89e75b2ceec4e9cf35d5876a7896ebc2b512cfb9ecc
 
-RUN buildDeps=' \
-    ca-certificates \
-    curl \
-    bzip2 \
-    gcc \
-    libpcre++-dev \
-    make \
-    libsqlite3-dev \
-    libz-dev \
-    libapr1-dev \
-    libaprutil1-dev \
-    libserf-dev \
-    libneon27-dev \
-  ' \
-  set -x \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends libsqlite3-0 libapr1 libserf-1-1 libneon27 \
-  && apt-get install -y --no-install-recommends $buildDeps \
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN depsRuntime=" \
+		libsqlite3-0 \
+		curl \
+		ca-certificates \
+		libserf-1-1 \
+		liblz4-1 \
+		libutf8proc2 \
+	" \
+	&& depsBuild=" \
+		ca-certificates \
+		bzip2 \
+		gcc \
+		libpcre++-dev \
+		libssl-dev \
+		make \
+		libsqlite3-dev \
+		zlib1g-dev \
+		libneon27-dev \
+		libserf-dev \
+		liblz4-dev \
+		libutf8proc-dev \
+	" \
+	set -x \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends $depsRuntime \
+	&& apt-get install -y --no-install-recommends $depsBuild \
   && rm -r /var/lib/apt/lists/* \
   && curl -SL "$SVN_BZ2_URL" -o subversion-$SVN_VERSION.tar.bz2 \
-  && echo "$SVN_BZ2_SHA1 subversion-$SVN_VERSION.tar.bz2" | sha1sum -c - \
+  && echo "$SVN_BZ2_SHA512 subversion-$SVN_VERSION.tar.bz2" | sha512sum -c - \
   && mkdir -p src/svn \
   && tar -xvf subversion-$SVN_VERSION.tar.bz2 -C src/svn --strip-components=1 \
   && rm subversion-$SVN_VERSION.tar.bz2* \

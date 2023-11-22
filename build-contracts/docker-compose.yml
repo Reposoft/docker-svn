@@ -1,9 +1,16 @@
-version: '2'
+version: '2.1'
 services:
+
+  rweb-source:
+    # Local build
+    # build: ../${RWEB_SOURCE}
+    # Online build
+    build: ../rweb/current-dist
+    image: solsson/rweb-source:${PUSH_TAG:-latest}
 
   svn:
     build: ../httpd
-    image: solsson/svn-httpd
+    image: solsson/svn-httpd:${PUSH_TAG:-latest}
     expose:
       - "80"
 
@@ -22,18 +29,37 @@ services:
     expose:
       - "80"
 
-  fpm-svn:
-    build: ../rweb/fpm-svn
-    image: solsson/fpm-svn
+  php-svn:
+    build:
+      context: ../rweb/fpm-svn
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/fpm-svn:${PUSH_TAG:-latest}
     entrypoint:
       - echo
       - "This was just a build job. Exiting."
 
-  rweb:
+  php-svn-rweb:
     depends_on:
-      - fpm-svn
-    build: ../rweb/fpm
-    image: solsson/rweb-fpm
+      - php-svn
+    build:
+      context: ../rweb/fpm-rweb
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/fpm-rweb:${PUSH_TAG:-latest}
+    entrypoint:
+      - echo
+      - "This was just a build job. Exiting."
+
+  rweb-fpm:
+    depends_on:
+      - php-svn-rweb
+      - rweb-source
+    build:
+      context: ../rweb/rweb
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/rweb-fpm:${PUSH_TAG:-latest}
     expose:
       - "9000"
     links:
@@ -42,8 +68,12 @@ services:
   rweb-httpd:
     depends_on:
       - svn
-    build: ../rweb/httpd
-    image: solsson/rweb-httpd
+      - rweb-source
+    build:
+      context: ../rweb/httpd
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
+    image: solsson/rweb-httpd:${PUSH_TAG:-latest}
     expose:
       - "80"
     environment:
@@ -61,12 +91,15 @@ services:
 
   svnclient:
     build: ../svnclient
-    image: solsson/svnclient
+    image: solsson/svnclient:${PUSH_TAG:-latest}
 
   svntest:
     depends_on:
       - svnclient
-    build: ./svntest
+    build:
+      context: ./svntest
+      args:
+        PUSH_TAG: ${PUSH_TAG:-latest}
     labels:
       com.yolean.build-contract: "*"
     links:

@@ -1,9 +1,9 @@
 
-FROM httpd:2.4.37@sha256:a613d8f1dbb35b18cdf5a756d2ea0e621aee1c25a6321b4a05e6414fdd3c1ac1
+FROM --platform=$TARGETPLATFORM httpd:2.4.53-bullseye@sha256:c479bec894c5a7f8878b28e52d03cc95b1e784612ecd01ac7c7394fc5fa2e6e2
 
-ENV SVN_VERSION 1.8.19
+ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2
-ENV SVN_BZ2_SHA1 51d7e5329ad86a650f8fc806eb68e581055a3fd1
+ENV SVN_BZ2_SHA512 20ada4688ca07d9fb8da4b7d53b5084568652a3b9418c65e688886bae950a16a3ff37710fcfc9c29ef14a89e75b2ceec4e9cf35d5876a7896ebc2b512cfb9ecc
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -12,6 +12,8 @@ RUN depsRuntime=" \
 		curl \
 		ca-certificates \
 		libserf-1-1 \
+		liblz4-1 \
+		libutf8proc2 \
 	" \
 	&& depsBuild=" \
 		ca-certificates \
@@ -24,13 +26,15 @@ RUN depsRuntime=" \
 		zlib1g-dev \
 		libneon27-dev \
 		libserf-dev \
+		liblz4-dev \
+		libutf8proc-dev \
 	" \
 	set -x \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends $depsRuntime \
 	&& apt-get install -y --no-install-recommends $depsBuild \
 	&& curl -SL "$SVN_BZ2_URL" -o subversion-$SVN_VERSION.tar.bz2 \
-	&& echo "$SVN_BZ2_SHA1 subversion-$SVN_VERSION.tar.bz2" | sha1sum -c - \
+	&& echo "$SVN_BZ2_SHA512 subversion-$SVN_VERSION.tar.bz2" | sha512sum -c - \
 	&& mkdir -p src/svn \
 	&& tar -xvf subversion-$SVN_VERSION.tar.bz2 -C src/svn --strip-components=1 \
 	&& rm subversion-$SVN_VERSION.tar.bz2* \

@@ -54,8 +54,60 @@ Deprecated. Omit the tag and get the full rweb instead.
 
 Stable Debian with latest subversion release. Useful because apt repositories are far behind.
 
-## Building
+## Build [rweb](https://github.com/Reposoft/rweb/) base images
 
 ```
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/:/source solsson/build-contract
+RWEB_SOURCE=$(pwd)/../rweb
+GIT_COMMIT=_dev
+COMPOSE_PARALLEL_LIMIT=1 \
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $(pwd):/source \
+  -v $RWEB_SOURCE:/rweb \
+  -e RWEB_SOURCE=../rweb \
+  -e PUSH_TAG=$GIT_COMMIT \
+  --entrypoint=docker-compose \
+  yolean/build-contract:29cb3f9a2fe6c53da6adfe186bf824c0591893fe@sha256:f21920e5923d9c42daa61f6e5515a321f14dc90eb5167ad7d36307ae7b9f8f5a \
+  -f build-contracts/docker-compose.yml -p docker-svn_docker-compose \
+  build \
+    svn \
+    php-svn \
+    php-svn-rweb \
+    rweb-source \
+    rweb-fpm \
+    rweb-httpd
 ```
+
+Note: Recent docker-compose versions seem to require double runs of the command above in order to make FROM work with a preceding build.
+
+## Build rweb runtime images
+
+Note that docker-compose and build-contract only supports single-arch images.
+Target platform will be that of the host platform.
+For legacy reasons the default tag should be linux/amd64.
+
+```
+grep -r RWEB_VERSION= .
+ARCH=$(docker info --format '{{.Architecture}}')
+GIT_COMMIT=$(git rev-parse --verify HEAD 2>/dev/null || echo '')
+if [[ ! -z "$GIT_COMMIT" ]]; then
+  GIT_STATUS=$(git status --untracked-files=no --porcelain=v2)
+  if [[ ! -z "$GIT_STATUS" ]]; then
+    GIT_COMMIT="$GIT_COMMIT-dirty"
+  fi
+fi
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/:/source \
+  -e PUSH_TAG=$GIT_COMMIT-$ARCH \
+  yolean/build-contract:29cb3f9a2fe6c53da6adfe186bf824c0591893fe@sha256:f21920e5923d9c42daa61f6e5515a321f14dc90eb5167ad7d36307ae7b9f8f5a \
+  -f build-contracts/docker-compose.yml -p docker-svn_docker-compose \
+  push
+```
+
+## Build multi-arch svn images
+
+Dockerfiles that have `FROM --platform=$TARGETPLATFORM` and don't depend on each other can be built this way:
+
+```
+GIT_COMMIT=(see above)
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT httpd
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT svnclient
+````

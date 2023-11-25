@@ -107,7 +107,16 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/:/source \
 Dockerfiles that have `FROM --platform=$TARGETPLATFORM` and don't depend on each other can be built this way:
 
 ```
-GIT_COMMIT=(see above)
-docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT httpd
-docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT svnclient
+GIT_COMMIT=$(git rev-parse --verify HEAD 2>/dev/null || echo '')
+if [[ ! -z "$GIT_COMMIT" ]]; then
+  GIT_STATUS=$(git status --untracked-files=no --porcelain=v2)
+  if [[ ! -z "$GIT_STATUS" ]]; then
+    GIT_COMMIT="$GIT_COMMIT-dirty"
+  fi
+fi
+PUSH=--push
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT $PUSH httpd
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svnclient:$GIT_COMMIT $PUSH svnclient
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/fpm-svn:$GIT_COMMIT $PUSH rweb/fpm-svn
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/fpm-svn:$GIT_COMMIT --build-arg PUSH_TAG=$GIT_COMMIT $PUSH rweb/fpm-rweb
 ````

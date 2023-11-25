@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim@sha256:fbaacd55d14bd0ae0c0441c2347217da77ad83c517054623357d1f9d07f79f5e
 
-ENV RWEB_VERSION=1.8.1
+ENV RWEB_VERSION=1.8.6
 ENV RWEB_TGZ_URL=https://github.com/Reposoft/rweb/releases/download/v${RWEB_VERSION}/ReposWeb-${RWEB_VERSION}.tgz
 ENV RWEB_TGZ_SHA256=b142c005f0d669ea2f531f4fb43311bd0bfabf1540980ee1bfb93d78e31d2b32
 

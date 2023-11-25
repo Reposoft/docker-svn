@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM debian:bullseye-slim@sha256:06a93cbdd49a265795ef7b24fe374fee670148a7973190fb798e43b3cf7c5d0f
+FROM --platform=$TARGETPLATFORM debian:bookworm-slim@sha256:2bc5c236e9b262645a323e9088dfa3bb1ecb16cc75811daf40a23a824d665be9
 
 ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2
@@ -19,7 +19,7 @@ RUN depsRuntime=" \
 	&& depsBuild=" \
 		bzip2 \
 		gcc \
-		libpcre++-dev \
+		libpcre3-dev \
 		libssl-dev \
 		make \
 		libsqlite3-dev \

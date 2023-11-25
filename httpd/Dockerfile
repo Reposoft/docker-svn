@@ -1,5 +1,5 @@
 
-FROM --platform=$TARGETPLATFORM httpd:2.4.53-bullseye@sha256:c479bec894c5a7f8878b28e52d03cc95b1e784612ecd01ac7c7394fc5fa2e6e2
+FROM --platform=$TARGETPLATFORM httpd:2.4.58-bookworm@sha256:04551bc91cc03314eaab20d23609339aebe2ae694fc2e337d0afad429ec22c5a
 
 ENV SVN_VERSION 1.14.2
 ENV SVN_BZ2_URL https://archive.apache.org/dist/subversion/subversion-$SVN_VERSION.tar.bz2
@@ -19,7 +19,7 @@ RUN depsRuntime=" \
 		ca-certificates \
 		bzip2 \
 		gcc \
-		libpcre++-dev \
+		libpcre3-dev \
 		libssl-dev \
 		make \
 		libsqlite3-dev \

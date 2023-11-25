@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM php:8.1.6-fpm-bullseye@sha256:e8791fa687e7cc58d4e76f77dddcde9de24cd306c274e334f25a6227ceec000f
+FROM --platform=$TARGETPLATFORM php:8.1-fpm-bookworm@sha256:a48ac2924feaded2e496db30f78790ff38fbcfe28a7945e76faf7c6b9e8ce3fb
 
 # Same build concept as in httpd,
 # but rweb should only have the svn client with http ra
@@ -21,7 +21,7 @@ RUN depsRuntime=" \
 		ca-certificates \
 		bzip2 \
 		gcc \
-		libpcre++-dev \
+		libpcre3-dev \
 		libssl-dev \
 		make \
 		libsqlite3-dev \

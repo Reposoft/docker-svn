@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
     locales \
     zlib1g-dev \
-    libicu67 \
+    libicu72 \
     libonig5 \
     libonig-dev \
     libzip4 \

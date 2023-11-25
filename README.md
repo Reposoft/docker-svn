@@ -118,5 +118,5 @@ PUSH=--push
 docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svn-httpd:$GIT_COMMIT $PUSH httpd
 docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/svnclient:$GIT_COMMIT $PUSH svnclient
 docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/fpm-svn:$GIT_COMMIT $PUSH rweb/fpm-svn
-docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/fpm-svn:$GIT_COMMIT --build-arg PUSH_TAG=$GIT_COMMIT $PUSH rweb/fpm-rweb
+docker buildx build --progress=plain --platform=linux/amd64,linux/arm64/v8 -t solsson/fpm-rweb:$GIT_COMMIT --build-arg PUSH_TAG=$GIT_COMMIT $PUSH rweb/fpm-rweb
 ````
